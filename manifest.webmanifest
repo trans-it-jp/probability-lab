@@ -1,0 +1,17 @@
+{
+  "name": "確率実験ラボ",
+  "short_name": "確率実験ラボ",
+  "description": "さいころを指定した回数だけ振り、理論上の確率と実際の結果を割合と回数の両方で並べて比べます。",
+  "lang": "ja",
+  "dir": "ltr",
+  "id": "/probability-lab/",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1b3a5c",
+  "categories": ["education"],
+  "icons": [
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

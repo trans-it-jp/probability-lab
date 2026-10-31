@@ -1,0 +1,174 @@
+/*!
+ * probability-lab — site.css
+ * 小さな画面と表示倍率の変更に耐えることを優先する。
+ * 色だけで意味を分けない（印刷・白黒でも読めるよう明度と線種でも分ける）。
+ */
+
+:root {
+  --ink: #16202b;
+  --ink-soft: #4a5663;
+  --line: #c9d2db;
+  --line-strong: #1b3a5c;
+  --bg: #ffffff;
+  --bg-soft: #f4f7fa;
+  --accent: #1b3a5c;
+  --warn-bg: #fdf3f2;
+  --warn-line: #a32b22;
+  --s1: 0.25rem;
+  --s2: 0.5rem;
+  --s3: 1rem;
+  --s4: 1.5rem;
+  --s5: 2.25rem;
+}
+
+* { box-sizing: border-box; }
+
+html { font-size: 100%; }
+
+body {
+  margin: 0 auto;
+  padding: var(--s3);
+  max-width: 48rem;
+  color: var(--ink);
+  background: var(--bg);
+  font-family: system-ui, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  line-height: 1.7;
+}
+
+h1 { font-size: 1.5rem; margin: 0 0 var(--s2); }
+h2 { font-size: 1.15rem; margin: 0 0 var(--s3); }
+h3 { font-size: 1rem; margin: var(--s4) 0 var(--s2); }
+
+.page-head { border-bottom: 2px solid var(--line-strong); padding-bottom: var(--s3); margin-bottom: var(--s4); }
+.lead { margin: 0; color: var(--ink-soft); }
+
+.step {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: var(--s3);
+  margin-bottom: var(--s4);
+}
+
+.step-no {
+  display: inline-block;
+  min-width: 1.6rem;
+  margin-right: var(--s2);
+  padding: 0 var(--s1);
+  text-align: center;
+  color: var(--bg);
+  background: var(--accent);
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.field { margin-bottom: var(--s3); }
+.field:last-child { margin-bottom: 0; }
+
+label, legend { display: block; font-weight: 600; margin-bottom: var(--s1); }
+
+input[type="text"], select, textarea {
+  width: 100%;
+  max-width: 22rem;
+  padding: var(--s2);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  font: inherit;
+  color: inherit;
+  background: var(--bg);
+}
+
+textarea { max-width: 100%; resize: vertical; }
+
+.help { margin: var(--s1) 0 0; font-size: 0.9rem; color: var(--ink-soft); }
+
+fieldset.weights { border: 1px solid var(--line); border-radius: 4px; padding: var(--s3); margin: 0 0 var(--s3); }
+
+.weight-row { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s2); }
+.weight-cell { display: flex; flex-direction: column; width: 4.5rem; }
+.weight-cell label { font-weight: 600; text-align: center; margin-bottom: var(--s1); }
+.weight-cell input { width: 100%; text-align: center; padding: var(--s1); }
+
+.preset-row { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s3); }
+
+.readout {
+  margin: var(--s3) 0 0;
+  padding: var(--s2);
+  background: var(--bg-soft);
+  border-left: 4px solid var(--accent);
+  font-size: 0.95rem;
+}
+
+button {
+  font: inherit;
+  padding: var(--s2) var(--s3);
+  border-radius: 4px;
+  cursor: pointer;
+  min-height: 2.75rem;
+}
+
+button.primary { background: var(--accent); color: var(--bg); border: 2px solid var(--accent); font-weight: 600; }
+button.ghost { background: var(--bg); color: var(--accent); border: 1px solid var(--accent); }
+button:hover { opacity: 0.88; }
+
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.errors {
+  margin-top: var(--s3);
+  padding: var(--s2) var(--s3);
+  background: var(--warn-bg);
+  border-left: 4px solid var(--warn-line);
+}
+.errors ul { margin: var(--s1) 0 0; padding-left: 1.2rem; }
+
+.prediction-echo {
+  padding: var(--s2);
+  background: var(--bg-soft);
+  border-left: 4px solid var(--accent);
+}
+
+table { border-collapse: collapse; width: 100%; margin-bottom: var(--s2); }
+caption { text-align: left; font-weight: 600; padding-bottom: var(--s1); }
+th, td { border: 1px solid var(--line); padding: var(--s2); text-align: right; }
+th[scope="row"], th[scope="col"]:first-child { text-align: left; }
+thead th { background: var(--bg-soft); }
+
+.compare td { font-variant-numeric: tabular-nums; }
+
+.chart-wrap { margin: var(--s2) 0; overflow-x: auto; }
+.chart-wrap svg { display: block; width: 100%; height: auto; min-width: 18rem; }
+
+/* 図は色ではなく線種と明度で分ける。印刷と白黒表示でも読めるようにする。 */
+.axis-line { stroke: var(--ink); stroke-width: 1; }
+.tick-label { fill: var(--ink-soft); font-size: 0.72rem; }
+.axis-title { fill: var(--ink); font-size: 0.78rem; font-weight: 600; }
+.series-line { fill: none; stroke: #16202b; stroke-width: 2; }
+.theory-line { fill: none; stroke: #8a95a1; stroke-width: 2; stroke-dasharray: 7 4; }
+.series-label { fill: #16202b; font-size: 0.78rem; font-weight: 600; }
+.theory-label { fill: #5a6672; font-size: 0.78rem; font-weight: 600; }
+
+.breakdown { margin-top: var(--s4); }
+.breakdown summary { cursor: pointer; font-weight: 600; padding: var(--s1) 0; }
+
+.saved { min-height: 1.5rem; margin: var(--s1) 0 var(--s2); color: var(--ink-soft); font-size: 0.9rem; }
+
+.page-foot {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s3);
+  margin-top: var(--s5);
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+.page-foot h2 { font-size: 1rem; }
+.page-foot p { margin: 0 0 var(--s2); }
+.version { font-style: italic; }
+
+@media (max-width: 30rem) {
+  body { padding: var(--s2); }
+  .weight-cell { width: calc(33.333% - var(--s2)); }
+  th, td { padding: var(--s1); font-size: 0.9rem; }
+}
+
+@media print {
+  .preset-row, button { display: none; }
+  .step { border: 1px solid #000; break-inside: avoid; }
+}

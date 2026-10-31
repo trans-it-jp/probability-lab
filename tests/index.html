@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>検証 — 確率実験ラボ</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="../css/site.css">
+<style>
+  .result th, .result td { text-align: left; }
+  .ok { color: #1b5e20; font-weight: 600; }
+  .ng { color: #a32b22; font-weight: 600; }
+  .summary { font-size: 1.1rem; font-weight: 600; margin: var(--s3) 0; }
+</style>
+</head>
+<body>
+
+<header class="page-head">
+  <h1>検証 — 確率実験ラボ</h1>
+  <p class="lead">tests/cases.js を読み込んで走らせます。<code>node tests/run.js</code> と同じ内容です。</p>
+</header>
+
+<main>
+<p class="summary" id="summary">実行中…</p>
+<table class="result">
+  <caption>項目ごとの結果</caption>
+  <thead><tr><th scope="col">区分</th><th scope="col">項目</th><th scope="col">結果</th></tr></thead>
+  <tbody id="rows"></tbody>
+</table>
+
+<section class="step">
+  <h2>画面でしか確かめられないもの</h2>
+  <p class="help">次は自動では判定できません。<a href="../index.html">本体の画面</a>を開いて目と手で確かめます。</p>
+  <ul>
+    <li>図・数値・説明の一致（破線の位置と理論値、実線の終点と相対度数）</li>
+    <li>表示倍率を変えたときと、小さい画面での表示</li>
+    <li>キーボードだけで予想の入力から実験まで到達できるか</li>
+    <li>説明なしで手順1から手順5まで進めるか（初見利用）</li>
+  </ul>
+</section>
+</main>
+
+<script src="../js/core/seeded-random.js"></script>
+<script src="../js/probability/experiment.js"></script>
+<script src="cases.js"></script>
+<script>
+(function () {
+  "use strict";
+  var cases = window.ProbabilityLab.cases;
+  var rows = document.getElementById("rows");
+  var passed = 0;
+
+  cases.forEach(function (testCase) {
+    var status, message = "";
+    try {
+      testCase.run();
+      status = "OK";
+      passed += 1;
+    } catch (error) {
+      status = "NG";
+      message = error.message;
+    }
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + testCase.group + "</td><td>" + testCase.name + "</td>"
+      + "<td class=\"" + (status === "OK" ? "ok" : "ng") + "\">" + status
+      + (message ? "<br>" + message : "") + "</td>";
+    rows.appendChild(tr);
+  });
+
+  document.getElementById("summary").textContent =
+    passed + " / " + cases.length + " 件が合格";
+})();
+</script>
+</body>
+</html>

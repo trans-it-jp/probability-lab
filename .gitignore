@@ -1,0 +1,14 @@
+# OS・一時ファイル
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.tmp
+tmp/
+
+# 認証情報・署名材料（このリポジトリには置かない）
+.env
+.env.*
+secrets/
+*.pfx
+*.p12
+*.key

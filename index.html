@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>確率実験ラボ</title>
+<meta name="description" content="さいころを指定した回数だけ振り、理論上の確率と実際の結果を割合と回数の両方で並べて比べます。">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1b3a5c">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<header class="page-head">
+  <h1>確率実験ラボ</h1>
+  <p class="lead">さいころを指定した回数だけ振って、<strong>理論上の確率</strong>と<strong>実際の結果</strong>を並べて比べます。</p>
+</header>
+
+<main>
+<form id="experiment-form" novalidate>
+
+  <section class="step" aria-labelledby="step1-title">
+    <h2 id="step1-title"><span class="step-no">1</span> 条件を決める</h2>
+
+    <div class="field">
+      <label for="trials">試行回数（さいころを振る回数）</label>
+      <input type="text" id="trials" name="trials" value="100" inputmode="numeric"
+             autocomplete="off" aria-describedby="trials-help">
+      <p class="help" id="trials-help">0 から 1000000 までの整数。</p>
+    </div>
+
+    <div class="field">
+      <label for="face">注目する目</label>
+      <select id="face" name="face">
+        <option value="1">1 の目</option>
+        <option value="2" selected>2 の目</option>
+        <option value="3">3 の目</option>
+        <option value="4">4 の目</option>
+        <option value="5">5 の目</option>
+        <option value="6">6 の目</option>
+      </select>
+    </div>
+
+    <fieldset class="weights">
+      <legend>さいころの偏り</legend>
+      <p class="help" id="weights-help">各面の出やすさの重み。すべて同じなら偏りのないさいころ。合計に対する割合が理論上の確率になります。</p>
+      <div class="weight-row" role="group" aria-describedby="weights-help">
+        <span class="weight-cell"><label for="w1">1</label><input type="text" id="w1" value="1" inputmode="numeric" autocomplete="off"></span>
+        <span class="weight-cell"><label for="w2">2</label><input type="text" id="w2" value="1" inputmode="numeric" autocomplete="off"></span>
+        <span class="weight-cell"><label for="w3">3</label><input type="text" id="w3" value="1" inputmode="numeric" autocomplete="off"></span>
+        <span class="weight-cell"><label for="w4">4</label><input type="text" id="w4" value="1" inputmode="numeric" autocomplete="off"></span>
+        <span class="weight-cell"><label for="w5">5</label><input type="text" id="w5" value="1" inputmode="numeric" autocomplete="off"></span>
+        <span class="weight-cell"><label for="w6">6</label><input type="text" id="w6" value="1" inputmode="numeric" autocomplete="off"></span>
+      </div>
+      <div class="preset-row">
+        <button type="button" class="ghost" id="preset-even">偏りをなくす</button>
+        <button type="button" class="ghost" id="preset-biased">偏りを入れる（2 の目を出にくく）</button>
+      </div>
+      <p class="readout" id="probability-readout" aria-live="polite"></p>
+    </fieldset>
+
+    <div class="field">
+      <label for="seed">乱数の種（再現用）</label>
+      <input type="text" id="seed" name="seed" value="2026-11-01" autocomplete="off" aria-describedby="seed-help">
+      <p class="help" id="seed-help">同じ種なら何度でも同じ結果になります。別の結果を見たいときは変えてください。</p>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="step2-title">
+    <h2 id="step2-title"><span class="step-no">2</span> 予想する</h2>
+    <div class="field">
+      <label for="prediction" id="prediction-label">この条件で、注目した目は何回くらい出ると思いますか</label>
+      <input type="text" id="prediction" name="prediction" inputmode="numeric" autocomplete="off"
+             aria-describedby="prediction-help">
+      <p class="help" id="prediction-help"><strong>先に書いてください。</strong>書かないと実験に進めません。当てる必要はありません。</p>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="step3-title">
+    <h2 id="step3-title"><span class="step-no">3</span> 実験する</h2>
+    <button type="submit" class="primary" id="run">実験する</button>
+    <div class="errors" id="errors" role="alert" hidden></div>
+  </section>
+
+</form>
+
+<section class="step result" id="result" aria-labelledby="step4-title" hidden>
+  <h2 id="step4-title"><span class="step-no">4</span> 比べる</h2>
+
+  <p class="prediction-echo" id="prediction-echo"></p>
+
+  <table class="compare">
+    <caption>理論上の値と実際の結果</caption>
+    <thead>
+      <tr><th scope="col">見かた</th><th scope="col">理論上</th><th scope="col">実際</th><th scope="col">差</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">割合</th>
+        <td id="p-theory"></td><td id="p-actual"></td><td id="p-diff"></td>
+      </tr>
+      <tr>
+        <th scope="row">回数</th>
+        <td id="c-theory"></td><td id="c-actual"></td><td id="c-diff"></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="help">割合と回数は同じ結果を別の見かたで表したものです。<strong>割合が理論値に近づいても、回数そのものが理論どおりになるとはかぎりません。</strong></p>
+
+  <h3>試行回数と相対度数の変化</h3>
+  <div class="chart-wrap" id="chart"></div>
+  <p class="help" id="chart-note"></p>
+
+  <details class="breakdown">
+    <summary>出た目の内訳を見る</summary>
+    <table class="counts">
+      <caption>各面が出た回数</caption>
+      <thead><tr><th scope="col">目</th><th scope="col">理論上</th><th scope="col">実際</th></tr></thead>
+      <tbody id="counts-body"></tbody>
+    </table>
+  </details>
+</section>
+
+<section class="step" id="explain-step" aria-labelledby="step5-title" hidden>
+  <h2 id="step5-title"><span class="step-no">5</span> 自分の言葉で説明する</h2>
+  <div class="field">
+    <label for="explanation">予想と結果はどう違いましたか。なぜそうなったと思いますか。</label>
+    <textarea id="explanation" rows="6" aria-describedby="explanation-help"></textarea>
+    <p class="help" id="explanation-help">書いた内容はこの端末の中だけに残ります。外へは送りません。</p>
+  </div>
+  <p class="saved" id="saved-note" aria-live="polite"></p>
+  <button type="button" class="ghost" id="clear-explanation">書いた内容を消す</button>
+</section>
+
+</main>
+
+<footer class="page-foot">
+  <h2>このページについて</h2>
+  <p><strong>残るもの:</strong> 手順5に書いた説明だけが、この端末の中に保存されます。次に開いたときに表示されます。</p>
+  <p><strong>残らないもの:</strong> 条件・予想・実験結果は、ページを閉じると消えます。</p>
+  <p><strong>送らないもの:</strong> 入力した内容も実験結果も、外部には送信しません。利用状況の記録もしていません。</p>
+  <p class="version">試作版。仕様・公開条件は未確定です。</p>
+</footer>
+
+<script src="js/core/seeded-random.js"></script>
+<script src="js/probability/experiment.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
