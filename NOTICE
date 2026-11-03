@@ -6,7 +6,9 @@
 
 js/core/seeded-random.js
   出所: trans-it-jp/js-demo（0004 JavaScript学習デモ）
-  版:   コミット 0dfec88
+  版:   コミット 94002c9
+        （2026-11-03訂正。複製時に記録した 0dfec88 は誤りで、実際の複製物は
+         94002c9 の内容と一致する。内容のハッシュで照合して確定した。）
   条件: MIT License
   改変: なし（そのまま複製）
 
